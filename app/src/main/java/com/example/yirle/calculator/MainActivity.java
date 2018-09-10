@@ -18,12 +18,34 @@ public class MainActivity extends AppCompatActivity {
     private Double operand1 = null;
     private static final String TAG = "MainActivity";
 
+    private static final String STATE_PENDING_OPERATION = "PendingOperation";
+    private static final String STATE_OPERAND1 = "Operand1";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initVars();
         initListeners();
+    }
+
+    //for saving vars in bundle when Actitivy gets destoryed
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION);
+        operand1 = savedInstanceState.getDouble(STATE_OPERAND1);
+        operandDisplay.setText(pendingOperation);
+    }
+
+    //load bundle when recreatet
+    @Override
+    protected void onSaveInstanceState(Bundle b) {
+        b.putString(STATE_PENDING_OPERATION, pendingOperation);
+        if (operand1 != null) {
+            b.putDouble(STATE_OPERAND1, operand1);
+        }
+        super.onSaveInstanceState(b);
     }
 
     //linking all vars to the XML vars including the buttonarray used to store all buttons the calculator provides
