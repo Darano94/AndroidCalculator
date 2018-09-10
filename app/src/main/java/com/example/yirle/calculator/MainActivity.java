@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
+    //vars
     private EditText newNumber;
     private EditText result;
     private TextView operandDisplay;
@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         initListeners();
     }
 
+    //linking all vars to the XML vars including the buttonarray used to store all buttons the calculator provides
     public void initVars() {
         buttons[0] = findViewById(R.id.button0);
         buttons[1] = findViewById(R.id.button1);
@@ -48,15 +49,17 @@ public class MainActivity extends AppCompatActivity {
         operandDisplay = findViewById(R.id.operandDisplay);
     }
 
+    //init ClickListeners
     public void initListeners() {
+        //when clicked add Number (buttontext) to newNumber(displays the users input)
         listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Button btnPressed = (Button) v;
                 newNumber.append(btnPressed.getText().toString());
-                System.out.println(btnPressed.getText().toString());
             }
         };
+        //when clicked set operandDisplay(displays the users choice of diff calcs.) to the chosen operand(buttontext)
         opListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,10 +72,9 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i <= 10; i++) {
             buttons[i].setOnClickListener(listener);
         }
-        //set 'opListener' on button 11-15
+        //set 'opListener' on button 11-15(+, -, *, /, =)
         for (int i = 11; i <= 15; i++) {
             buttons[i].setOnClickListener(opListener);
-//        }
         }
     }
 }
