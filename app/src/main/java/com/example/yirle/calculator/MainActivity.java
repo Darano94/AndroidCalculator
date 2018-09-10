@@ -2,6 +2,7 @@ package com.example.yirle.calculator;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,9 +14,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText result;
     private TextView operandDisplay;
     private String pendingOperation = "=";
-    private View.OnClickListener listener;
-    private View.OnClickListener opListener;
     private Button[] buttons = new Button[16];
+    private Double operand1 = null;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     //init ClickListeners
     public void initListeners() {
         //when clicked add Number (buttontext) to newNumber(displays the users input)
-        listener = new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Button btnPressed = (Button) v;
@@ -60,14 +61,22 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         //when clicked set operandDisplay(displays the users choice of diff calcs.) to the chosen operand(buttontext)
-        opListener = new View.OnClickListener() {
+        View.OnClickListener opListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Button btnPressed = (Button) v;
-                operandDisplay.setText(btnPressed.getText().toString());
+                String op = btnPressed.getText().toString();
+                try {
+                    Double value = Double.valueOf(newNumber.getText().toString());
+                    performCalculation(value, op);
+                } catch (NumberFormatException e) {
+                    Log.d(TAG, "onClick: wrong inputformat");
+                    newNumber.setText("");
+                }
+                pendingOperation = op;
+                operandDisplay.setText(pendingOperation);
             }
         };
-        buttons[2].setOnClickListener(listener);
         //set 'listener' on button 0-9 and buttonDot
         for (int i = 0; i <= 10; i++) {
             buttons[i].setOnClickListener(listener);
@@ -76,5 +85,39 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 11; i <= 15; i++) {
             buttons[i].setOnClickListener(opListener);
         }
+    }
+
+    //calculate method
+    private void performCalculation(Double value, String op) {
+        if (null == operand1) {
+            operand1 = value;
+        } else {
+            if (pendingOperation.equals("=")) {
+                pendingOperation = op;
+            }
+            switch (pendingOperation) {
+                case "+":
+                    operand1 += value;
+                    break;
+                case "-":
+                    operand1 -= value;
+                    break;
+                case "x":
+                    operand1 *= value;
+                    break;
+                case "/":
+                    if (value == 0.0) {
+                        operand1 = 0.0;
+                    } else {
+                        operand1 /= value;
+                    }
+                    break;
+                case "=":
+                    operand1 = value;
+                    break;
+            }
+        }
+        result.setText(operand1.toString());
+        newNumber.setText("");
     }
 }
