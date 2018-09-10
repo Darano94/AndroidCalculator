@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText result;
     private TextView operandDisplay;
     private String pendingOperation = "=";
-    private Button[] buttons = new Button[16];
+    private Button[] buttons = new Button[17];
     private Double operand1 = null;
     private static final String TAG = "MainActivity";
 
@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         buttons[13] = findViewById(R.id.buttonMinus);
         buttons[14] = findViewById(R.id.buttonPlus);
         buttons[15] = findViewById(R.id.buttonEquals);
+        buttons[16] = findViewById(R.id.buttonNeg);
+
 
         newNumber = findViewById(R.id.newNumber);
         result = findViewById(R.id.result);
@@ -99,6 +101,24 @@ public class MainActivity extends AppCompatActivity {
                 operandDisplay.setText(pendingOperation);
             }
         };
+        //when clicked neg number
+        View.OnClickListener negListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String value = newNumber.getText().toString();
+                if (value.length() == 0) {
+                    newNumber.setText("-");
+                } else {
+                    try {
+                        Double dValue = Double.valueOf(value);
+                        dValue *= -1;
+                        newNumber.setText(dValue.toString());
+                    } catch (NumberFormatException e) {
+                        newNumber.setText("");
+                    }
+                }
+            }
+        };
         //set 'listener' on button 0-9 and buttonDot
         for (int i = 0; i <= 10; i++) {
             buttons[i].setOnClickListener(listener);
@@ -107,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 11; i <= 15; i++) {
             buttons[i].setOnClickListener(opListener);
         }
+        //set 'negListener' on button neg
+        buttons[16].setOnClickListener(negListener);
     }
 
     //calculate method
