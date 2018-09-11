@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         operandDisplay.setText(pendingOperation);
     }
 
-    //load bundle when recreatet
+    //load bundle when recreated
     @Override
     protected void onSaveInstanceState(Bundle b) {
         b.putString(STATE_PENDING_OPERATION, pendingOperation);
